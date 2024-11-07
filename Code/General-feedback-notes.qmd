@@ -1,0 +1,55 @@
+---
+title: "General Notes"
+format: html
+editor: visual
+---
+
+### General Feedback Notes
+
+#### Point 1.
+
+Make sure that when you run code, you follow up with some commentary about what you learned by running the code.
+
+For example, if you use `glimpse()` or `str()` to look at a dataset, I'd like you to follow that code chunk with a summary statement or two about what you learned. For example, with the Halloween Data, you might say: "My data includes 49 rows of 7 variables. Two of the variables, Costume_type and sugar_high, appear to be factor variables." Write down what the main things are that you learned from running the functions. Otherwise, what is the point of running the functions?
+
+#### Point 2.
+
+Work on improving use of markdown for the visual rendering of your `.qmd` files. For example,
+
+## this makes everything a giant header when you read it in visual mode and it is super ugly.
+
+#### Point 3.
+
+Think about how you space your code to improve readability. These two different code blocks accomplish the same thing, but the second one is much easier to read.
+
+Block 1
+
+```{r}
+Halloween_data %>%
+  group_by(sugar_high) %>% summarise(mean_age = mean(age), sd_age = sd(age), mean_g_candy_consumed = mean(g_candy_consumed), sd_g_candy_consumed = sd(g_candy_consumed)) %>%
+view()
+```
+
+Block 2
+
+```{r}
+Halloween_data %>%
+  group_by(sugar_high) %>% 
+  summarise(
+    mean_age = mean(age), 
+    sd_age = sd(age),
+    mean_g_candy_consumed = mean(g_candy_consumed),
+    sd_g_candy_consumed = sd(g_candy_consumed)) %>%
+view()
+```
+
+#### Point 4.
+
+THINK about the choices you make, based on understanding the data. For example, in this halloween data set, some of you opted to make `costume` a factor variable. When you examine the data, you cans quickly see that `Costume_type`
+just has a few possible values and is likely meant to be a factor. But looking at the values in`costume` it is pretty clearly just a description of the costume being worn.
+
+Not all variables that have characters in them will be factors.
+
+#### Point 5.
+
+
