@@ -3,26 +3,34 @@ title: "Moore-PS2.qmd"
 format: html
 editor: visual
 ---
+
 Setting up workspace and reading in dataset
+
 ```{r}
 rm (list = ls())
 library(tidyverse)
 library(here)
 halloween <- read.csv(here("Data", "Halloween_data_PS2.csv"))
 ```
+
 Examining data
+
 ```{r}
 View(halloween)
 glimpse(halloween)
 ```
+
 Assigning appropriate data types
+
 ```{r}
 #Turning data from character to factor
 halloween <- halloween %>% mutate(costume = as.factor(costume))
 halloween <- halloween %>% mutate(Costume_type = as.factor(Costume_type))
 halloween <- halloween %>% mutate(sugar_high = as.factor(sugar_high))
 ```
+
 Fixing data to combine levels in a factor with the same value but written in a different format, and checking the levels before and after
+
 ```{r}
 #Fixing costume levels
 levels(halloween$costume)[levels(halloween$costume)=="Princess"] <- "princess"
@@ -47,11 +55,15 @@ levels(halloween$sugar_high)[levels(halloween$sugar_high)=="NO"] <- "no"
 levels(halloween$sugar_high)[levels(halloween$sugar_high)=="Yes"] <- "yes"
 levels(halloween$sugar_high)
 ```
+
 Making a scatterplot of min_temp_trick_treat_C vs age
+
 ```{r}
 ggplot(halloween, aes(x = age, y = min_temp_trick_treat_C, colour = Costume_type, shape = Costume_type)) + geom_point(size = 3) + theme_bw() + xlab("Age of trick-or-treater (years)") + ylab("Minimum temperature while out (C)") + labs(caption = "Figure 1. Minimum temperature that kids will trick-or-treat before going home as a function of each child's age and costume type.") + theme(plot.caption = element_text(color = "darkgrey", face="italic"))
 ```
+
 Isolating data for children who are 10 years old or older and consumed 100 or more grams of Halloween candy, and plotting a count of the number of kids who each ate certain numbers of pieces of candy on a histogram
+
 ```{r}
 #Isolating children who are 10 years old or older and consumed 100 or more grams of Halloween candy
 halloween1 <- filter(halloween, age >= 10)
@@ -63,17 +75,15 @@ candy_count <- halloween2 %>% group_by(candy_pieces)
 #Plotting a histogram of candy count for this data frame
 ggplot(candy_count, aes(x = candy_pieces)) + geom_histogram() + xlab("Number of candy pieces eaten") + ylab("Count") + labs(caption = "Figure 2. Count of number of children (age 10 and older and who consumed at least 100 grams of candy) eating different numbers of pieces of candy.") + theme(plot.caption = element_text(color = "darkgrey", face="italic"))
 ```
-Calculating summary statistics for the mean and standard deviation for age and grams of candy consumed broken down by whether or not the child experienced a sugar high. 
+
+Calculating summary statistics for the mean and standard deviation for age and grams of candy consumed broken down by whether or not the child experienced a sugar high.
+
 ```{r}
 halloween %>% group_by(sugar_high) %>% summarize(mean_age = mean(age), sd_age = sd(age), mean_g_candy_consumed = mean(g_candy_consumed), sd_g_candy_consumes = sd(g_candy_consumed)) %>% View
 ```
+
 Making a box and whisker plot comparing costume type to amount of candy consumed, grouped by if the child got a sugar high
+
 ```{r}
 ggplot(halloween, aes(x = Costume_type, y = g_candy_consumed)) + geom_boxplot() + facet_wrap(~sugar_high) + theme_bw() + geom_point(color = "orange") + xlab("Costume type") + ylab("Amount of candy consumed (g)") + labs(caption = "Figure 3. Box and whisker plot showing amount of candy consumed by children wearing different types of Halloween costume seperated according to whether the child experienced a resulting sugar high (no vs. yes).") + theme(plot.caption = element_text(color = "darkgrey", face="italic")) 
 ```
-
-
-
-
-
-
