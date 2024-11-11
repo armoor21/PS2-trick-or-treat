@@ -1,0 +1,163 @@
+---
+title: "Problem Set 2 Key"
+author: "Erika Barthelmess"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+### Introduction
+
+Since our last problem set, we've been learning to use RStudio and git/github. We have also been learning the first steps of a data analysis workflow: data checking (for errors), subsetting data, summarizing data and plotting data. Problem Set two will ask you to demonstrate your proficiency with those skills.
+
+Begin by setting things up and pulling in the data
+
+```{r}
+rm(list = ls())
+library(here)
+library(tidyverse)
+
+treat<-read.csv(here("Data", "Halloween_data_PS2.csv"))
+```
+
+Take a look at the data with at least 2 functions
+
+```{r}
+str(treat)
+summary(treat)
+glimpse(treat)
+```
+
+Make some variables into factors. We can see that costume is just a text field with all sorts of values and should stay as is as a character variable. However, we can also see that Costume_type and sugar_high seem to be categories and should thus be converted to factor variables.
+
+```{r}
+treat$Costume_type<-as.factor(treat$Costume_type)
+treat$sugar_high <-as.factor(treat$sugar_high)
+```
+
+### Error checking
+Now that we have our data pulled in and have assigned variable types, we need to check the data for errors. Start by looking at the factor variables.
+
+```{r}
+levels(treat$Costume_type)
+```
+We can see that there are suppossed to be 3 levels of the Costume_type factor: Not scary, Scary, and Uncertain. Let's fix these now.
+
+Need to fix scare status
+```{r}
+fix <-which(treat$Costume_type %in% c("not scary", "notscary"))
+
+treat$Costume_type[fix] <- "Not scary"
+
+fix <- which(treat$Costume_type %in% c("scaly", "scary", "scary "))
+
+treat$Costume_type[fix] <- "Scary"
+
+treat$Costume_type <- factor(treat$Costume_type)
+levels(treat$Costume_type)
+```
+Ok. Looks good. 
+
+Now check sugar high
+
+```{r}
+levels(treat$sugar_high)
+```
+Again, we have an issue. Let's get ourselves to 2 levels for this factor.
+
+```{r}
+fix <- which(treat$sugar_high %in% c("No", "NO"))
+treat$sugar_high[fix] <- "no"
+
+fix <- which(treat$sugar_high == "Yes")
+treat$sugar_high[fix] <- "yes"
+
+treat$sugar_high <- factor(treat$sugar_high)
+levels(treat$sugar_high)
+```
+Ok. Looks good. 
+
+Now let's plot the data to look for any possible outliers as part of our error-checking process.We will plot candy_pieces, age, g_candy_consumed and min_temp_trick_treat_C
+
+```{r}
+#histogram of candy_pieces
+ggplot(treat, aes(candy_pieces))+
+  geom_histogram()+
+  facet_wrap(~Costume_type)
+
+#histogram of age
+ggplot(treat, aes(age))+
+  geom_histogram()+
+  facet_wrap(~Costume_type)
+
+#histogram of g_candy_consumed
+ggplot(treat, aes(g_candy_consumed))+
+  geom_histogram()+
+  facet_wrap(~Costume_type)
+
+#histogram of min_temp_trick_treat_C
+ggplot(treat, aes(min_temp_trick_treat_C))+
+  geom_histogram()+
+  facet_wrap(~Costume_type)
+```
+There do not appear to be any bad outliers. Continuing.
+
+### Make a scatterplot
+Make a scatterplot of min_temp_trick_treat_C vs. age to recreate Figure 1 as closely as possible.
+
+```{r}
+ggplot(treat, aes(age, min_temp_trick_treat_C, shape = Costume_type, color = Costume_type ))+
+  geom_point(size = 5)+
+  xlab("Age of trick-or-treater (years)")+
+  ylab("Minimum temperature while out (C)")+
+  theme_bw()
+
+ggsave(here("PS2", "Outputs", "temp_vs_age_costume_type.png"),device = "png")
+```
+
+### Isolate children 10 or older who ate 100g or more candy and plot histogram
+Next write code that isolates data for children who are age 10 or older and who consumed 100 or more grams of candy. Use the resulting data to plot a histogram 
+
+```{r}
+treat %>% filter(age > 9 & g_candy_consumed >= 100) %>% 
+  ggplot(aes(candy_pieces))+
+  geom_histogram()+
+  xlab("Number of candy pieces eaten")+
+  ylab("Count")
+ggsave(here("PS2", "Outputs", "histogram-number-pieces-eaten.png"))
+```
+
+### Calculate summary statistics
+Next calculate some summary statistics that show the mean and standard deviation for the following variables broken down by whether or not the child experienced a sugar high. Include in your code a method that opens a view of the resulting data as a new table view in RStudio. Do not create a new object in your Environment.
+
+- age
+- grams of candy consumed
+
+
+```{r}
+treat %>% group_by(sugar_high) %>% summarise(
+  mean_age = mean(age, na.rm = T),
+  sd_age = sd(age, na.rm = T),
+  mean_g_candy = mean(g_candy_consumed, na.rm = T),
+  sd_g_candy = sd(g_candy_consumed, na.rm = T),
+) %>% View()
+```
+
+### Replicate figure 3
+Now write code that replicates figure 3 as closely as you can.
+
+```{r}
+ ggplot(treat, aes(Costume_type, g_candy_consumed))+
+  geom_boxplot()+
+  geom_point(color = "orange", size = 2, alpha = 0.8)+
+  facet_wrap(~sugar_high)+
+    ylab("Amount of candy consumed (g)")+
+    xlab("Costume type")+
+    theme_bw()
+  
+  ggsave(here("PS2", "Outputs", "candy_vs_costume_type.png"))
+```
+
+
+
+
+
