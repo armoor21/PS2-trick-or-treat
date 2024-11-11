@@ -1,0 +1,40 @@
+---
+title: "ps2 feedback"
+format: html
+editor: visual
+---
+
+## Problem Set 2 feedback
+You didn't name your project according to the instructions.
+
+I'd like to see you do more to provide commentary on the code chunks that you execute. For example, you ran some functions to look at the data, but what did you learn? What is important/needs to be noticed/remarked upon so that the next time you open a file, you know what's what?
+
+Costume does not need to be a factor variable. Why did you make it one? Remember, not every character variable needs to be assigned as factor.
+
+The way you have fixed the sugar high levels is fine, but it is not the same way we learned to do it in class. 
+
+You did not check errors on any of the numeric variables.
+
+Work on improving the readability of your code by improving the spacing. Here's the code you had for the first figure:
+
+```{r}
+ggplot(halloween, aes(x = age, y = min_temp_trick_treat_C, colour = Costume_type, shape = Costume_type)) + geom_point(size = 3) + theme_bw() + xlab("Age of trick-or-treater (years)") + ylab("Minimum temperature while out (C)") + labs(caption = "Figure 1. Minimum temperature that kids will trick-or-treat before going home as a function of each child's age and costume type.") + theme(plot.caption = element_text(color = "darkgrey", face="italic"))
+```
+
+which is really hard to read. What if you had this:
+
+```{r}
+ggplot(halloween, aes(x = age, y = min_temp_trick_treat_C, colour = Costume_type, shape = Costume_type)) + 
+  geom_point(size = 3) + 
+  theme_bw() + 
+  xlab("Age of trick-or-treater (years)") + 
+  ylab("Minimum temperature while out (C)") + 
+  labs(caption = "Figure 1. Minimum temperature that kids will trick-or-treat before going home as a function of each child's age and costume type.") + 
+  theme(plot.caption = element_text(color = "darkgrey", face="italic"))
+```
+
+Much easier to read. Apply throughout.
+
+Also, we didn't look at how to get a figure caption. I'm glad you figured it out, but it was not required.
+
+You didn't demonstrate your ability to use the `which()` function in fixing errors.
