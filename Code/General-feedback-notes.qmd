@@ -45,11 +45,10 @@ view()
 
 #### Point 4.
 
-THINK about the choices you make, based on understanding the data. For example, in this halloween data set, some of you opted to make `costume` a factor variable. When you examine the data, you cans quickly see that `Costume_type`
-just has a few possible values and is likely meant to be a factor. But looking at the values in`costume` it is pretty clearly just a description of the costume being worn.
+THINK about the choices you make, based on understanding the data. For example, in this halloween data set, some of you opted to make `costume` a factor variable. When you examine the data, you cans quickly see that `Costume_type` just has a few possible values and is likely meant to be a factor. But looking at the values in`costume` it is pretty clearly just a description of the costume being worn.
 
 Not all variables that have characters in them will be factors.
 
 #### Point 5.
 
-
+When you are ready to turn in an assignment, it is a good idea to quit RStudio and then re-start, re-load your project and run all the code. Make sure that your code and comments are clean and relevant to the assignment and that the code doesn't have stuff that you are no longer using as part of your "final" submission.
